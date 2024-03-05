@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz with Images</title>
+  <style>
+    body {
+        background-image: url('arkaplan.png'); /* Resmin dosya adını ve uzantısını buraya ekleyin */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: rgb(0, 0, 0); /* Metin rengini belirleyebilirsiniz */
+    }
+    #quiz-container {
+      max-width: 600px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+    .question {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .image {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .option {
+      margin-bottom: 10px;
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      transition: background-color 0.3s;
+    }
+    .option:hover {
+      background-color: #e0e0e0;
+    }
+    .option.selected {
+      background-color: #b3e0ff;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #e40303;
+    }
+    #scoreboard {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div id="quiz-container">
+  <label for="playerName">Adınız:</label>
+  <input type="text" id="playerName">
+  <div id="question" class="question"></div>
+  <img id="image" class="image" src="" alt="Question Image">
+  <ul id="options" class="options"></ul>
+  <button onclick="checkAnswer()">Onayla</button>
+  <div id="result"></div>
+  <div id="scoreboard"></div>
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "soru5.jpg",
+      options: ["21/21 yapan ilk kişiye 1000 TL hediye çeki verilecektir :) ", "pkk", "dhkpc", "İsrail"],
+      correctAnswer: "İsrail",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "feto2.jpg",
+      options: ["pkk", "fetö", "dhkpc", "mkp"],
+      correctAnswer: "fetö",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "pkk3.jpeg",
+      options: ["fetö", "dhkpc", "pkk", "Nepal Komünist Partisi"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "soru1.jpg",
+      options: ["fetö", "pkk", "mlkp", "dhkpc"],
+      correctAnswer: "fetö",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "pkk4.jpeg",
+      options: ["fetö", "pkk", "dhkpc", "mkp"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "MLKP.jpeg",
+      options: ["fetö", "pkk", "mlkp", "dhkpc"],
+      correctAnswer: "mlpk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "feto4.jpg",
+      options: ["fetö", "dhkpc", "pkk", "Nepal Komünist Partisi"],
+      correctAnswer: "fetö",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "soru7.jpg",
+      options: ["fetö", "pkk", "dhkpc", "nepal komünist Partisi"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "dhkpc.jpeg",
+      options: ["fetö", "pkk", "dhkpc", "Taliban"],
+      correctAnswer: "dhkpc",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "pkk0.jpg",
+      options: ["fetö", "pkk", "dhkpc", "mlkp"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "ansdjfs Hangi Terör Örgütü ?",
+      image: "apo.jpg",
+      options: ["fetö", "pkk", "dhkpc", "lgbtqwerty"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "feto.jpeg",
+      options: ["fetö", "pkk", "mlkp", "mkp"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "soru3.jpg",
+      options: ["dhkpc", "fetö", "mlkp", "mkp"],
+      correctAnswer: "fetö",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "pkk6.jpg",
+      options: ["dhpc", "pkk", "dhkpc", "fetö"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "feto7.jpg",
+      options: ["mkp", "pkk", "dhkpc", "fetö"],
+      correctAnswer: "fetö",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "feto10.jpeg",
+      options: ["taliban", "pkk", "fetö", "mlkp"],
+      correctAnswer: "fetö",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "pkk1.jpeg",
+      options: ["fetö", "taliban", "pkk", "dhkpc"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "soru2.jpg",
+      options: ["fetö", "taliban", "pkk", "dhkpc"],
+      correctAnswer: "fetö",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "pkk9.jpg",
+      options: ["taliban", "pkk", "fetö", "mlkp"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "pkk2.jpg",
+      options: ["fetö", "taliban", "pkk", "dhkpc"],
+      correctAnswer: "pkk",
+      userAnswer: null
+    },
+    {
+      question: "Hangi Terör Örgütü ?",
+      image: "apo.jpg",
+      options: ["fetö", "taliban", "pkk", "lgbtqwerty"],
+      correctAnswer: "lgbtqwerty",
+      userAnswer: null
+    },
+  ];
+
+  let currentQuestion = 0;
+  let playerName = "";
+  let score = 0;
+
+  function loadQuestion() {
+    const questionElement = document.getElementById('question');
+    const imageElement = document.getElementById('image');
+    const optionsElement = document.getElementById('options');
+
+    questionElement.textContent = quizData[currentQuestion].question;
+    imageElement.src = quizData[currentQuestion].image;
+
+    optionsElement.innerHTML = "";
+    for (const option of quizData[currentQuestion].options) {
+      const li = document.createElement('li');
+      li.textContent = option;
+      li.className = 'option';
+      li.onclick = function() {
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => option.classList.remove('selected'));
+        li.classList.add('selected');
+        quizData[currentQuestion].userAnswer = li.textContent;
+      };
+      optionsElement.appendChild(li);
+    }
+  }
+
+  function checkAnswer() {
+    const selectedOption = document.querySelector('.option.selected');
+
+    if (selectedOption && selectedOption.textContent === quizData[currentQuestion].correctAnswer) {
+      score++;
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const quizContainer = document.getElementById('quiz-container');
+    const successPercentage = Math.round((score / quizData.length) * 100);
+    let resultMessage = "";
+
+    if (successPercentage >= 90) {
+      resultMessage = "Zoru başardın MİT'te çalışmaya ne dersin?";
+    } else if (successPercentage >= 75) {
+      resultMessage = " cCc İşte Düşmanını tanıyan bir TÜRK Genci";
+    } else if (successPercentage >= 50) {
+      resultMessage = "Eyy Mete Han'ın torunu git ve dostun kim düşmanın kim öğren https://www.terorarananlar.pol.tr";
+    } else {
+      resultMessage = "Tabi siz anneleri tarafından size emanet edilen çocuklara her bakımdan yetersiz gördüğünüz bir kadının annelik etmesine şiddetle karşısınız ama" ;
+    }
+
+    quizContainer.innerHTML = `
+      <div id="result">
+        ${playerName} Skorun ${score} / ${quizData.length}.
+        <br>
+        Başarı yüzden ${successPercentage}%
+        <br>
+        ${resultMessage}
+      </div>
+      <div id="scoreboard"></div>
+      <button onclick="location.reload()">Tekrar Oyna</button>
+    `;
+    displayScoreboard();
+  }
+
+  function displayScoreboard() {
+    const scoreboardElement = document.getElementById('scoreboard');
+    scoreboardElement.innerHTML = `<h2>Created by ARDA</h2>`;
+    
+    scoreboardElement.innerHTML += `
+      <table>
+        <tr>
+          <th>Oyuncu Adı</th>
+          <th>Skor</th>
+        </tr>
+    `;
+    
+    // Her oyuncunun adını ve skorunu tabloya ekleyin
+    scoreboardElement.innerHTML += `
+      <tr>
+        <td>${playerName}</td>
+        <td>${score}</td>
+      </tr>
+    `;
+    
+    scoreboardElement.innerHTML += `</table>`;
+  }
+
+  document.getElementById('playerName').addEventListener('input', function (e) {
+    playerName = e.target.value;
+  });
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
